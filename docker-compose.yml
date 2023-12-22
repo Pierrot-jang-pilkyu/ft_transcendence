@@ -9,25 +9,27 @@ services:
     ports:
       - '5173:5173'
     env_file:
-      - ./.env
+      - ./frontend/.env
   nestapp:
     container_name: nestapp
     image: francescoxx/nestapp:1.0.0
-    build: .
+    build:
+          context: ./backend
+          dockerfile: Dockerfile
     ports:
       - '3000:3000'
       - '3131:3131'
     env_file:
-      - ./.env
+      - ./backend/.env
     depends_on:
       - db
   db:
     container_name: db
     image: postgres
     pull_policy: never
-    build: ./postgres
+    build: ./backend/postgres
     env_file:
-      - ./.env
+      - ./backend/.env
     ports:
       - '5432:5432'
     volumes:
