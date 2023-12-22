@@ -1,0 +1,49 @@
+.container {
+  position: relative;
+  display: flex;
+  justify-content: flex-start;
+  flex-shrink: 0;
+  height: 3.69%;
+  width: 100%;
+  left: 4.93%;
+  margin-bottom: 2.56%;
+
+  font-size: clamp(10px, 1vw, 200px);
+  font-style: normal;
+  font-family: "Noto Sans", sans-serif;
+  line-height: normal;
+  font-weight: 700;
+  letter-spacing: 0.2px;
+}
+
+.win {
+  font-size: clamp(10px, 1vw, 200px);
+  margin-right: 6.09%;
+  color: #285ada;
+}
+
+.lose {
+  font-size: clamp(10px, 1vw, 200px);
+  margin-right: 4.93%;
+  color: #ff9416;
+}
+
+.time {
+  margin-right: 29.77%;
+  color: #353535;
+  font-size: clamp(10px, 0.8vw, 200px);
+  font-weight: 400;
+}
+
+.matchtext {
+  margin-right: 1.97%;
+  color: #7b7b7b;
+  font-size: clamp(10px, 0.8vw, 200px);
+  font-weight: 400;
+}
+
+.name {
+  margin-right: 0;
+  color: #353535;
+  font-size: clamp(10px, 0.8vw, 200px);
+}

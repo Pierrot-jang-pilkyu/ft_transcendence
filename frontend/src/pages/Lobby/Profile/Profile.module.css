@@ -1,0 +1,176 @@
+.button {
+	position: absolute;
+    width: 55vw;
+    height: 15vh;
+    flex-shrink: 0;
+	border-radius: 12px;
+    background: rgba(255, 255, 255, 0.00);
+}
+
+.button:hover {
+	background-color: rgba(255, 255, 255, 0.20);
+	color: #285ADA;
+	transition: 0.3s;
+}
+
+.profile_container {
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+    position: relative;
+    width: 55vw;
+    height: 15vh;
+    flex-shrink: 0;
+	border-radius: 12px;
+    background: rgba(255, 255, 255, 0.50);
+	top: 45%;
+    left: 22%;
+	/* gap: 56px; */
+}
+
+.profile_img {
+    position: absolute;
+    /* width: 120px;
+    height: 120px; */
+    /* width: 11.32%; */
+    height: 75%;
+    aspect-ratio: 1 / 1;
+	flex-shrink: 0;
+	border-radius: 50%;
+	background-color: #ce9595;
+	/* top: 7%; */
+	left: 4%;
+    /* 수직 중앙 정렬 */
+    top: 50%;
+    transform: translate(0, -50%);
+}
+
+.profile_second {
+    position: relative;
+    display: flex;
+	flex-direction: column;
+    gap: 9%;
+    /* width: 50%; */
+    width: 30vw;
+    height: 60%;
+    background: rgba(255, 255, 255, 0.00);
+    left: 22%;
+    /* 수직 중앙 정렬 */
+    top: 50%;
+    transform: translate(0, -50%);
+}
+
+.profile_name {
+    position: absolute;
+    color: #FFF;
+    font-family: 'Noto Sans', sans-serif;
+    font-size: 3vh;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 1;
+}
+
+.profile_record {
+    position: relative;
+    display: flex;
+	flex-direction: row;
+    gap: 8%;
+    width: 30vw;
+    height: 3vh;
+    background: rgba(255, 255, 255, 1.00);
+}
+
+.profile_win {
+    position: absolute;
+    /* color: #D8BFD8;                         스코틀랜드 왕가 훈장색 (엉겅퀴) */
+    color: #FFF;
+    font-family: 'Noto Sans', sans-serif;
+    font-size: 2.22vh;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 1;
+    top: 65%;
+}
+
+.profile_win_value {
+    position: absolute;
+    /* color: #D8BFD8;                         스코틀랜드 왕가 훈장색 (엉겅퀴) */
+    color: #FFF;
+    font-family: 'Noto Sans', sans-serif;
+    font-size: 2.22vh;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 1;
+    top: 65%;
+	left: 11.3%;
+}
+
+.profile_lose {
+    position: absolute;
+    /* color: #990000;                         핏빛 */
+    color: #FFF;
+    font-family: 'Noto Sans', sans-serif;
+    font-size: 2.22vh;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 1;
+    top: 65%;
+    left: 23%;
+}
+
+.profile_lose_value {
+    position: absolute;
+    /* color: #990000;                         핏빛 */
+    color: #FFF;
+    font-family: 'Noto Sans', sans-serif;
+    font-size: 2.22vh;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 1;
+    top: 65%;
+    left: 35.2%;
+}
+
+.profile_line {
+	/* line - 세로(left, right), 가로(top, bottom) */
+	border-left: 1px solid #FFF;
+	height: 62.5%;
+	display: block;
+	/* left: 80%; */
+	margin-left: 80%;
+	/* 수직 중앙 정렬 */
+    top: 50%;
+    transform: translate(0, -50%);
+}
+
+.profile_crown {
+	position: absolute;
+	left: 86.5%;
+	top: 23.1%;
+	width: 5.66%;
+	height: 25%;
+}
+
+.profile_rank {
+	position: absolute;
+	color: #FFF;
+    font-family: 'Noto Sans', sans-serif;
+    font-size: 2.22vh;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 1;
+	left: 84%;
+	top: 60%;
+}
+
+.profile_rank_value {
+	position: absolute;
+	color: #FFF;
+    font-family: 'Noto Sans', sans-serif;
+    font-size: 2.22vh;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 1;
+	left: 92%;
+	top: 60%;
+}

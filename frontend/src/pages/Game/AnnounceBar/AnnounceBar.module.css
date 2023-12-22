@@ -1,0 +1,9 @@
+.container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: "Anton", sans-serif;
+    font-size: 23px;
+    height: 35px;
+    color: #fff;
+}

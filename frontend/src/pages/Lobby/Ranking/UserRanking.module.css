@@ -1,0 +1,62 @@
+.userRanking_container {
+  /* display: block; */
+  position: relative;
+  width: 24vw;
+  height: 2.6vh;
+  flex-shrink: 0;
+  background: rgba(0, 0, 0, 0);
+}
+
+.userRanking_rank {
+  position: absolute;
+  width: 1.67vw;
+  height: 2.5vh;
+  flex-shrink: 0;
+  color: #353535;
+  font-family: "Noto Sans", sans-serif;
+  font-size: 1.85vh;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: 0.02vh;
+  text-align: left;
+  background: none;
+  top: 0%;
+  left: 0%;
+}
+
+.userRanking_nickname {
+  position: absolute;
+  width: 15.74vw;
+  height: 2.5vh;
+  flex-shrink: 0;
+  color: #353535;
+  font-family: "Noto Sans", sans-serif;
+  font-size: 1.85vh;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: 0.02vh;
+  text-align: left;
+  background: none;
+  top: 0%;
+  left: 4.53vw;
+}
+
+.userRanking_lose {
+  position: absolute;
+  width: 4.69vw;
+  height: 2.04vh;
+  flex-shrink: 0;
+  color: #0800ff;
+  font-family: "Noto Sans", sans-serif;
+  font-size: 1.48vh;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: 0.02vh;
+  text-align: left;
+  background: none;
+  top: 0%;
+  left: 19.85vw;
+}

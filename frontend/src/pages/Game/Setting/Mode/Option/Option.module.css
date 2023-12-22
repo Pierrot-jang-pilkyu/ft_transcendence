@@ -1,0 +1,31 @@
+.container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    width: 320px;
+    justify-content: space-between;
+
+    font-size: 28px;
+    font-style: normal;
+	font-family: 'Noto Sans', sans-serif;
+	line-height: normal;
+	font-weight: 400;
+    color: #fff;
+}
+
+.select {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.button {
+    padding-top: 0;
+    padding-bottom: 0;
+    border: none;
+    background: rgba(255, 255, 255, 0);;
+}
+
+.button:focus {
+    outline: none;
+}

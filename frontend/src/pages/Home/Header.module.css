@@ -1,0 +1,46 @@
+.header{
+	position: absolute;
+	left: 0;
+	top: 0;
+	width: 100vw;
+	height: 80px;
+	background: #FFF;
+}
+
+.button {
+	padding: 0;
+	border: none;
+	background: none;
+}
+
+.button:focus {
+	outline: none;
+}
+
+.home {
+	position: absolute;
+	left: 22%;
+	height: 100%;
+	align-items: center;
+
+	color: #285ADA;
+	font-family: 'Anton', sans-serif;
+	font-size: 40px;
+	font-style: normal;
+	line-height: normal;
+}
+
+.logout {
+	position: relative;
+	left: 73%;
+	height: 100%;
+	align-items: center;
+
+	color: #285ADA;
+	text-align: right;
+	font-family: 'Noto Sans', sans-serif;
+	font-size: 24px;
+	font-style: normal;
+	font-weight: 500;
+	line-height: normal;
+}

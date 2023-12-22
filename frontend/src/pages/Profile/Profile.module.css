@@ -1,0 +1,52 @@
+.Allcontainer {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  position: relative;
+  top: 12.96%;
+
+  color: #fff;
+  font-family: "Noto Sans", sans-serif;
+  font-size: clamp(18px, 1.25vw, 200px);
+  font-style: normal;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.background {
+  width: 100vw;
+  height: 100vh;
+  background: #285ada;
+}
+
+.button {
+  position: absolute;
+  width: 17.7083vw;
+  color: #fff;
+  text-align: center;
+  font-family: "Noto Sans", sans-serif;
+  font-size: 2.222vh;
+  font-style: normal;
+  font-weight: 700;
+  line-height: normal;
+}
+
+.buttonone {
+  display: flex;
+  position: absolute;
+  justify-content: center;
+  align-items: center;
+  color: #fff;
+  font-family: "Noto Sans", sans-serif;
+  font-size: 1.8519vh;
+  font-style: normal;
+  font-weight: 700;
+  line-height: normal;
+  border-radius: 8px;
+  border: 2px solid #fff;
+  background: rgba(255, 255, 255, 0.2);
+  left: 22.4%;
+  top: 66.3%;
+  width: 17.71%;
+  height: 4.44%;
+}

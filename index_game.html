@@ -1,0 +1,174 @@
+<html>
+
+<head>
+
+</head>
+
+<body>
+  <div>
+    userId: <input id="user" type="text" />
+    <button onclick="regist()">regist socket</button>
+    <button onclick="match()">Match Making</button>
+    <button onclick="cancel()">Match Cancel</button>
+  </div>
+  <div>
+    RoomId: <input id="room" type="text" />
+    <button onclick="join()">join</button>
+  </div>
+  <div>
+    speed: <input id="speed" type="text" />
+    ballSize: <input id="ballSize" type="text" />
+    barSize: <input id="barSize" type="text" />
+    <button onclick="option()">Option</button>
+    <button onclick="ready()">Ready</button>
+  </div>
+  <div>
+    <button onclick="pause()">pause</button>
+    <button onclick="resume()">resume</button>
+  </div>
+  <div>
+    bar: <input id="bar" type="text" />
+    <button onclick="ping()">ping</button>
+  </div>
+  <div>
+    x: <input id="x" type="text" />
+    y: <input id="y" type="text" />
+    <button onclick="hit()">hit</button>
+  </div>
+  <div>
+    <button onclick="point()">get Point</button>
+  </div>
+  <script src="https://cdn.socket.io/4.3.2/socket.io.min.js"
+    integrity="sha384-KAZ4DtjNhLChOB/hxXuKqhMLYvx3b5MlT55xPEiNmREKRzeEm+RVPlTnAn0ajQNs"
+    crossorigin="anonymous"></script>
+  <script>
+    const user = document.getElementById('user');
+    const room = document.getElementById('room');
+    const bar = document.getElementById('bar');
+    const x = document.getElementById('x');
+    const y = document.getElementById('y');
+    const speed = document.getElementById('speed');
+    const ballSize = document.getElementById('ballSize');
+    const barSize = document.getElementById('barSize');
+    let socket = io('http://localhost:3131/games');
+    let game = null;
+
+    socket.on('NOTICE', function (data) {
+      console.log(data);
+    });
+    socket.on('LOAD', function (data) {
+      game = data;
+      console.log(data);
+    });
+    socket.on('OPTION', function (data) {
+      console.log(data);
+    });
+    socket.on('READY', function (data) {
+      console.log("ready");
+    });
+    socket.on('START', function (data) {
+      console.log("게임 스타트");
+    });
+    socket.on('PONG', function (data) {
+      console.log(data);
+    });
+    socket.on('VECTOR', function (data) {
+      console.log(data);
+    });
+    socket.on('SCORE', function (data) {
+      console.log(data);
+    });
+    socket.on('PAUSE', function (data) {
+      console.log("게임 정지");
+    });
+    socket.on('RESUME', function (data) {
+      console.log("게임 재개");
+    });
+    socket.on('RELOAD', function (data) {
+      game = data;
+      console.log(data);
+      console.log("게임복구");
+    });
+    socket.on('WAIT', function (data) {
+      console.log("상대 찾는 중...( 경과 시간: " + data + " )");
+    });
+    socket.on('MATCH', function (data) {
+      console.log(data);
+    });
+    socket.on('END', function (data) {
+      if (game)
+        console.log(data.winnerUserId + " 승리")
+      game = null;
+    });
+
+    function regist() {
+      socket.emit('REGIST', parseInt(user.value));
+    }
+    function match() {
+      socket.emit('MATCH', parseInt(user.value));
+      console.log("waitting...");
+    }
+    function join() {
+      console.log("join");
+      socket.emit("JOIN", {
+        roomId: room.value,
+        send: {
+          id: 1,
+          name: "amanda",
+          status: 1,
+          avatar: null
+        },
+        recv: {
+          id: 2,
+          name: "bread",
+          status: 1,
+          avatar: null
+        }
+      })
+    }
+    function option() {
+      if (!game)
+        return;
+      socket.emit('OPTION', { speed: parseInt(speed.value), ballSize: parseInt(ballSize.value), barSize: parseInt(barSize.value) });
+    }
+    function ready() {
+      if (!game)
+        return;
+      console.log("emit ready");
+      socket.emit('READY', game);
+    }
+    function ping() {
+      if (!game)
+        return;
+      const data = { roomId: game.roomId, ball: { x: 2, y: 54 }, bar: parseInt(bar.value), isLeft: game.isLeft }
+      socket.emit('PING', data);
+    }
+    function hit() {
+      if (!game)
+        return;
+      const data = { roomId: game.roomId, xv: parseInt(x.value), yv: parseInt(y.value) };
+      socket.emit('HIT', data);
+    }
+    function point() {
+      if (!game)
+        return;
+      const data = { roomId: game.roomId, isLeft: game.isLeft };
+      socket.emit('SCORE', data);
+    }
+    function pause() {
+      if (!game)
+        return;
+      socket.emit('PAUSE', {});
+    }
+    function resume() {
+      if (!game)
+        return;
+      socket.emit('RESUME', {});
+    }
+    function cancel() {
+      socket.emit('CANCEL', {});
+    }
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,31 @@
+.main {
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	position: fixed;
+	top: 56%;
+    left: 22%;
+	gap: 56px;
+}
+
+.title {
+	color: #FFF;
+	font-family: 'Anton', sans-serif;
+	font-size: 80px;
+}
+
+.img {
+	float: right;
+}
+
+.cover {
+	object-fit: cover;
+}
+
+.background {
+	width: 100vw;
+	height: 100vh;
+	/* max-width: 1920px; */
+	/* aspect-ratio: 1920 / 1080; */
+	background: #285ADA;
+}

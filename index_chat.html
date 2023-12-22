@@ -1,0 +1,179 @@
+<html>
+
+<head>
+
+</head>
+
+<body>
+  <div>
+    userId: <input id="user" type="text" />
+    <button onclick="regist()">regist socket</button>
+  </div>
+  <div>
+    game: <input id="game" type="text" />
+    <button onclick="invite()">invite </button>
+    <button onclick="accept_game()">yes </button>
+    <button onclick="refuse_game()">no </button>
+  </div>
+  <div>
+    friend: <input id="friend" type="text" />
+    <button onclick="request_friend()">friend </button>
+    <button onclick="accept_friend()">yes </button>
+    <button onclick="refuse_friend()">no </button>
+  </div>
+  <div>
+    channelId: <input id="channel" type="text" />
+    password: <input id="input_password" type="text" />
+    <button onclick="enter()">enter room</button>
+    <button onclick="quit()">quit room</button>
+  </div>
+  <div>
+    chat: <input id="chat" type="text" />
+    <button onclick="kick()">kick </button>
+    <button onclick="ban()">ban </button>
+    <button onclick="unban()">unban </button>
+    <button onclick="mute()">mute </button>
+    <button onclick="op()">op </button>
+    <button onclick="block()">block </button>
+    <button onclick="unblock()">unblock </button>
+  </div>
+  <div>
+    <input id="message" type="text" />
+    <button onclick="send()">send test</button>
+  </div>
+  <div>
+    channelName: <input id="channelName" type="text" />
+    password: <input id="password" type="text" />
+    limit: <input id="limit" type="text" />
+    <button onclick="host()">host</button>
+  </div>
+  <script src="https://cdn.socket.io/4.3.2/socket.io.min.js"
+    integrity="sha384-KAZ4DtjNhLChOB/hxXuKqhMLYvx3b5MlT55xPEiNmREKRzeEm+RVPlTnAn0ajQNs"
+    crossorigin="anonymous"></script>
+  <script>
+    let frinedRequest = null;
+    let gameRequest = null;
+    const channel = document.getElementById('channel');
+    const channelName = document.getElementById('channelName');
+    const password = document.getElementById('password');
+    const input_password = document.getElementById('input_password');
+    const limit = document.getElementById('limit');
+    const user = document.getElementById('user');
+    const chat = document.getElementById('chat');
+    const game = document.getElementById('game');
+    const friend = document.getElementById('friend');
+    const message = document.getElementById('message');
+    let socket = io('http://localhost:3131/chats');
+
+    socket.on('MSG', function (data) {
+      console.log(data);
+    });
+    socket.on('INFO_CH_MEMBER', function (data) {
+      console.log(data);
+    });
+    socket.on('KICK', function (data) {
+      console.log("강퇴되었습니다.");
+      socket.emit('EXIT', { userId: parseInt(user.value), channelId: parseInt(channel.value) });
+    });
+    socket.on('NOTICE', function (data) {
+      console.log(data);
+    });
+    socket.on('INFO_CH_LIST', function (data) {
+      console.log(data);
+    });
+    socket.on('JOIN', function (data) {
+      console.log(data);
+    });
+    socket.on('LOADCHAT', function (data) {
+      console.log(data);
+    });
+    socket.on('QUIT', function (data) {
+      console.log(data);
+    });
+    socket.on('BAN', function (data) {
+      console.log(data);
+    });
+    socket.on('BLOCK', function (data) {
+      console.log(data);
+    });
+    socket.on('JOIN_GAME', function (data) {
+      console.log(data);
+    });
+    socket.on('INVITE', function (data) {
+      gameRequest = data;
+      console.log(gameRequest);
+      console.log(gameRequest.send.name + " 님이 게임 초대하였습니다.");
+    });
+    socket.on('REQUEST_FRIEND', function (data) {
+      frinedRequest = data;
+      console.log(frinedRequest);
+      console.log(frinedRequest.send.name + " 님이 친구 요청하였습니다.");
+    });
+
+    function kick() {
+      socket.emit('KICK', { channelId: parseInt(channel.value), userId: parseInt(user.value), target: chat.value });
+    }
+    function ban() {
+      socket.emit('BAN', { channelId: parseInt(channel.value), userId: parseInt(user.value), target: chat.value });
+    }
+    function unban() {
+      socket.emit('UNBAN', { channelId: parseInt(channel.value), userId: parseInt(user.value), target: chat.value });
+    }
+    function mute() {
+      socket.emit('MUTE', { channelId: parseInt(channel.value), userId: parseInt(user.value), target: chat.value });
+    }
+    function op() {
+      socket.emit('OP', { channelId: parseInt(channel.value), userId: parseInt(user.value), target: chat.value });
+    }
+    function block() {
+      socket.emit('BLOCK', { channelId: parseInt(channel.value), userId: parseInt(user.value), target: chat.value });
+    }
+    function unblock() {
+      socket.emit('UNBLOCK', { channelId: parseInt(channel.value), userId: parseInt(user.value), target: chat.value });
+    }
+    function regist() {
+      socket.emit('REGIST', parseInt(user.value));
+    }
+    function invite() {
+      socket.emit('INVITE', { userId: parseInt(user.value), target: game.value });
+    }
+    function send() {
+      socket.emit('MSG', { userId: parseInt(user.value), channelId: parseInt(channel.value), content: message.value });
+      message.value = null;
+    }
+    function enter() {
+      socket.emit('JOIN', { userId: parseInt(user.value), channelId: parseInt(channel.value), password: input_password.value });
+    }
+    function quit() {
+      socket.emit('QUIT', { userId: parseInt(user.value), channelId: parseInt(channel.value) });
+    }
+    function host() {
+      socket.emit('HOST', { userId: parseInt(user.value), title: channelName.value, password: password.value, limit: parseInt(limit.value) });
+    }
+    function accept_game() {
+      if (gameRequest)
+        socket.emit('ACCEPT_GAME', gameRequest);
+      gameRequest = null;
+    }
+    function refuse_game() {
+      if (gameRequest)
+        socket.emit('REFUSE_GAME', gameRequest);
+      gameRequest = null;
+    }
+    function request_friend() {
+      socket.emit('REQUEST_FRIEND', { userId: parseInt(user.value), target: friend.value });
+    }
+    function accept_friend() {
+      if (frinedRequest)
+        socket.emit('ACCEPT_FRIEND', frinedRequest);
+      frinedRequest = null;
+    }
+    function refuse_friend() {
+      if (frinedRequest)
+        socket.emit('REFUSE_FRIEND', frinedRequest);
+      frinedRequest = null;
+    }
+  </script>
+</body>
+
+</html>

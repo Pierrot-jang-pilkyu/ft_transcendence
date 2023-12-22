@@ -1,0 +1,103 @@
+.container {
+  display: grid;
+  grid-template-areas:
+    "game friend"
+    "game chat";
+  row-gap: 1vh;
+  column-gap: 1vw;
+}
+
+.button {
+  flex-shrink: 0;
+  border-radius: 12px;
+  background: #fff;
+  box-shadow: 0px 0px 22px 4px rgba(32, 16, 16, 0.2);
+}
+
+.chat_img {
+  width: 30%;
+  height: 50%;
+}
+
+.game {
+  grid-area: game;
+  width: 27vw;
+  height: 27vh;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.game_img {
+  width: 40%;
+  height: 41%;
+}
+
+.chat {
+  grid-area: chat;
+  width: 27vw;
+  height: 17vh;
+  padding-left: 2vw;
+  position: relative;
+  gap: 3vw;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.game_font {
+  color: #285ada;
+  text-align: center;
+  font-family: "Noto Sans", sans-serif;
+  font-size: 3.5rem;
+  font-style: normal;
+  font-weight: 700;
+  line-height: normal;
+}
+
+.chat_font {
+  color: #285ada;
+  text-align: center;
+  font-family: "Noto Sans", sans-serif;
+  font-size: 3rem;
+  font-style: normal;
+  font-weight: 700;
+  line-height: normal;
+}
+.alert {
+  display: grid;
+  width: 100%;
+  grid-auto-flow: row;
+  align-content: flex-start;
+  align-items: center;
+  justify-items: center;
+  gap: 1rem /* 16px */;
+  text-align: center;
+  border-width: 1px;
+  --tw-border-opacity: 1;
+  border-color: hsl(var(--b2) / var(--tw-border-opacity));
+  padding: 1rem /* 16px */;
+  --tw-text-opacity: 1;
+  color: hsl(var(--bc) / var(--tw-text-opacity));
+  border-radius: var(--rounded-box, 1rem /* 16px */);
+  --alert-bg: hsl(var(--b2));
+  --alert-bg-mix: hsl(var(--b1));
+  background-color: var(--alert-bg);
+}
+@media (min-width: 640px) {
+  .alert {
+    grid-auto-flow: column;
+    grid-template-columns: auto minmax(auto, 1fr);
+    justify-items: start;
+    text-align: left;
+  }
+}
+.alert_error {
+  border-color: hsl(var(--er) / 0.2);
+  --tw-text-opacity: 1;
+  color: hsl(var(--erc) / var(--tw-text-opacity));
+  --alert-bg: hsl(var(--er));
+  --alert-bg-mix: hsl(var(--b1));
+}

@@ -1,0 +1,21 @@
+.button {
+	color: #FFF;
+	text-align: center;
+	font-family: 'Noto Sans', sans-serif;
+	font-weight: 700;
+	font-size: 28px;
+	font-style: normal;
+	line-height: 1;
+	width: 320px;
+	height: 64px;
+	flex-shrink: 0;
+	border-radius: 8px;
+	border: 2px solid #FFF;
+	background-color: #102D78;
+}
+
+.button:hover {
+	background-color: #FFF;
+	color: #102D78;
+	transition: 0.3s;
+}

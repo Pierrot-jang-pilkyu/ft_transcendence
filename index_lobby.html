@@ -1,0 +1,103 @@
+<html>
+
+<head>
+
+</head>
+
+<body>
+  <div>
+    user: <input id="user" type="text" />
+    token: <input id="token" type="text" />
+    <button onclick="connect()">connect socket</button>
+  </div>
+  <div>
+    game: <input id="game" type="text" />
+    <button onclick="invite()">invite</button>
+    <button onclick="accept_game()">yes</button>
+    <button onclick="refuse_game()">no</button>
+  </div>
+  <div>
+    friend: <input id="friend" type="text" />
+    <button onclick="request_friend()">friend</button>
+    <button onclick="accept_friend()">yes</button>
+    <button onclick="refuse_friend()">no</button>
+  </div>
+  <div>
+    update: <input id="update" type="text" />
+    <button onclick="update()">update</button>
+  </div>
+  <script src="https://cdn.socket.io/4.3.2/socket.io.min.js"
+    integrity="sha384-KAZ4DtjNhLChOB/hxXuKqhMLYvx3b5MlT55xPEiNmREKRzeEm+RVPlTnAn0ajQNs"
+    crossorigin="anonymous"></script>
+  <script>
+    let frinedRequest = null;
+    let gameRequest = null;
+    const user = document.getElementById('user');
+    const game = document.getElementById('game');
+    const friend= document.getElementById('friend');
+    const update1 = document.getElementById('update');
+    const token = document.getElementById('token');
+    let socket = io('http://localhost:3131/lobby', {
+    autoConnect: false,
+    transportOptions: {
+        polling: {
+            extraHeaders: {
+                Authorization: `Bearer ${token.value}`,
+            }
+        }
+    }
+});
+
+    socket.on('NOTICE', function (data) {
+      console.log("aaaaa");
+      console.log(data);
+    });
+    socket.on('INVATE', function (data) {
+      gameRequest = data;
+      console.log(gameRequest);
+      console.log(gameRequest.send.name + " 님이 게임 초대하였습니다.");
+    });
+    socket.on('INFO_FRIENDS', function (data) {
+      console.log(data);
+    })
+    socket.on('REQUEST_FRIEND', function (data) {
+      frinedRequest = data;
+      console.log(frinedRequest);
+      console.log(frinedRequest.send.name + " 님이 친구요청 하였습니다.");
+    });
+    function connect() {
+      socket.connect();
+    }
+    function request_friend() {
+      socket.emit('REQUEST_FRIEND', { userId: parseInt(user.value), target: friend.value });
+    }
+    function accept_friend() {
+      if (frinedRequest)
+        socket.emit('ACCEPT_FRIEND', frinedRequest);
+      frinedRequest = null;
+    }
+    function refuse_friend() {
+      if (frinedRequest)
+        socket.emit('REFUSE_FRIEND', frinedRequest);
+      frinedRequest = null;
+    }
+    function invite() {
+      socket.emit('INVITE', { userId: parseInt(user.value), target: game.value });
+    }
+    function accept_game() {
+      if (gameRequest)
+        socket.emit('ACCEPT_GAME', gameRequest);
+      gameRequest = null;
+    }
+    function refuse_game() {
+      if (gameRequest)
+        socket.emit('REFUSE_GAME', gameRequest);
+      gameRequest = null;
+    }
+    function update() {
+      socket.emit('UPDATE', { name: update1.value, avatar: "testestestest" });
+    }
+  </script>
+</body>
+
+</html>
