@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useState, useContext } from 'react';
+import { useRef, useEffect, useState, useContext } from 'react';
 import styles from "./Gaming.module.css"
 import { GameContext, socket } from '../Utils';
 import { useNavigate } from 'react-router-dom';
@@ -132,7 +132,6 @@ function Gaming() {
 		
 		socket.on("RESUME", ()=>{
 			render();
-			console.log("resume");
 		})
 
 		return (()=>{

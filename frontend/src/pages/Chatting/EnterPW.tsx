@@ -24,8 +24,6 @@ function EnterPW({ onClose, onEnter, id }) {
 
   const navigate = useNavigate();
   function onClick() {
-    console.log(pw);
-    
     onEnter(pw);
   }
 

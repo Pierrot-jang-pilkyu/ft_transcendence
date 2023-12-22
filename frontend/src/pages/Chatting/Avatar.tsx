@@ -20,18 +20,13 @@ function Avatar(props:any) {
         // selecting the elements for which we want to add a tooltip
         const target:any = document.getElementById("tooltip-avatar");
         const tooltip:any = document.getElementById("tooltip-text");
-
-        console.log(target);
-        console.log(tooltip);
         // change display to 'block' on mouseover
         target.addEventListener('mouseover', () => {
-            console.log("mouseover");
             tooltip.style.display = 'block';
         }, false);
         
         // change display to 'none' on mouseleave
         target.addEventListener('mouseleave', () => {
-            console.log("mouseleave");
             tooltip.style.display = 'none';
         }, false);
 

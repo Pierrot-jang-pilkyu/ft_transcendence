@@ -5,7 +5,6 @@ function TestChatList(socket: any) {
 
     useEffect(() => {
         socket.on("INFO_CH_LIST", function (responseData:any) { 
-            console.log(responseData);
             setData(responseData);
         });
     }, [])

@@ -89,7 +89,6 @@ function ChangeModal({ onClose }) {
   };
   function onChangeName(e) {
     setUserName(e.target.value);
-    console.log(e.target.value);
   }
 
   return (
