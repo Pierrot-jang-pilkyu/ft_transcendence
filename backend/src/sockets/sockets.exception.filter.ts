@@ -21,6 +21,9 @@ export class SocketExceptionFilter extends BaseWsExceptionFilter {
       const msg = this.getNotice("Token expired", 202, client.data.status);
       client.emit("NOTICE", msg);
     }
+    else if (exception.code === '23502') {
+      client.emit("NOTICE", this.getNotice("존재하지 않는 유저입니다.", 11, client.data.status));
+    }
     else {
       const msg = this.getNotice("DB Error", 200, client.data.status);
       client.emit("NOTICE", msg);

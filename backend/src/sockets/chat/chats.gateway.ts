@@ -26,6 +26,7 @@ import { SocketExceptionFilter } from '../sockets.exception.filter';
 import { STATUS } from '../sockets.type';
 
 import { hash } from 'bcrypt';
+import { ChatLog } from 'src/chats/entities/chat-log.entity';
 
 @WebSocketGateway(3131, {
   cors: { credentials: true, origin: process.env.CALLBACK_URL },
@@ -173,16 +174,16 @@ export class ChatsGateway implements OnGatewayConnection, OnGatewayDisconnect {
     try {
       const targetId: number = parseInt(message.targetId);
       const userId: number = parseInt(message.userId);
+      if (targetId === userId)
+        return ;
       const isExist = await this.chatsService.readDmUserWithTarget(userId, targetId);
       if (isExist.length != 0) {
-        console.log(isExist);
         client.emit('DM', { channelId: isExist[0].id, title: message.targetName });
         await this.chatsSocketService.connectChatRoom(client, isExist[0].id, userId); 
         return;
       }
 
       const isBlock = await this.usersService.readUserBlockWithTargetId(targetId, userId);
-      console.log(isBlock);
       // block 되어 있는지 확인
       if (isBlock) {
         let log = this.chatsSocketService.getNotice('상대방에게 차단 되어있습니다.', 43, client.data.status);
@@ -203,7 +204,6 @@ export class ChatsGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
       await this.chatsSocketService.createDMRoom(client, roomId, message);
 
-      console.log("DM channelId:", roomId, " title: ", message.targetName);
       client.emit("DM", { channelId: roomId, title: message.targetName });
       this.chatsSocketService.sendChannelMember(client, roomId);
       const targetSocket = await this.clients.get(targetId);
@@ -256,7 +256,6 @@ export class ChatsGateway implements OnGatewayConnection, OnGatewayDisconnect {
     // 맴버 조회 있으면 그냥 접속
     const isMember = await this.chatsService.readMemberInChannel(message.channelId, message.userId);
     if (isMember) {
-      console.log("exist room connect");
       this.chatsSocketService.connectChatRoom(client, message.channelId, message.userId);
       return;
     }
@@ -304,11 +303,8 @@ export class ChatsGateway implements OnGatewayConnection, OnGatewayDisconnect {
   @UseGuards(JwtWsGuard)
   @SubscribeMessage('QUIT')
   async quitChatRoom(client: Socket, message) {
-    console.log("execute QUIT", message);
     const channelMembers = await this.chatsService.readOneChannelMemberWithDm(message.channelId);
-    console.log("channel Member", channelMembers);
     if (channelMembers.length === 1) {
-      console.log("dm quit 1");
       // member가 1명인 상태에서 나가기 때문에 방이 같이 제거되는 경우
       const member = channelMembers.find((member) => member.user.id == message.userId);
       if (!member)
@@ -319,7 +315,6 @@ export class ChatsGateway implements OnGatewayConnection, OnGatewayDisconnect {
         if (user.data.userId !== client.data.userId)
           this.chatsSocketService.sendChannelList(user, user.data.userId);
       });
-      console.log("dm quit2");
     }
     else {
       const member = channelMembers.find((member) => member.user.id == message.userId);
@@ -328,18 +323,13 @@ export class ChatsGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
       // dm인 경우
       if (member.channel.dm) {
-        console.log("is Dm");
         const target = await this.chatsService.readDmTargetId(member.channel.id, client.data.userId);
         
         const targetSocket = await this.clients.get(target.user.id);
 
         if (!(!targetSocket)) {
-          console.log("target location: ", targetSocket.data.roomId);
-          console.log("Me location :", client.data.roomId);
           if (targetSocket.data.roomId === targetSocket.data.roomId)
-            console.log("equal");
           if (targetSocket.data.roomId === target.channel.id.toString()) {
-            console.log("in Dm target");
             targetSocket.emit('DM_QUIT', target.id);
             await this.chatsService.deleteChannelMember(member.id);
             await this.chatsSocketService.exitChatRoom(client, message.channelId, message.userId);
@@ -387,8 +377,19 @@ export class ChatsGateway implements OnGatewayConnection, OnGatewayDisconnect {
   @UseGuards(JwtWsGuard)
   @SubscribeMessage('MSG')
   async sendMessage(client: Socket, message) {
-    console.log("MSG", client.data.roomId);
-    await this.chatsSocketService.sendMessage(client, message);
+    const log = await this.chatsSocketService.sendMessage(client, message);
+    this.clients.forEach((v) => this.sendWithOutUserBlock(v, client, log));
+  }
+
+  async sendWithOutUserBlock(v: Socket, client: Socket, log: ChatLog) {
+   if (v.data.roomId === client.data.roomId) {
+      if (v.data.userId !== client.data.usreId) {
+        const userBlocks = await this.usersService.readBlockList(v.data.userId);
+        const isBlock = userBlocks.find((e) => e.target.id === client.data.userId);
+        if (typeof(isBlock) === 'undefined')
+          v.emit('MSG', log);
+      }
+    }
   }
 
   @UseGuards(JwtWsGuard)
@@ -405,6 +406,8 @@ export class ChatsGateway implements OnGatewayConnection, OnGatewayDisconnect {
       client.emit('NOTICE', log);
       return;
     }
+    if (client.data.userId === targetUser.id)
+      return ;
     const targetSocket = this.clients.get(targetUser.id);
     const log = await this.chatsSocketService.commandKick(client, data.channelId, targetUser.id, targetSocket);
     client.emit('NOTICE', log);
@@ -422,6 +425,9 @@ export class ChatsGateway implements OnGatewayConnection, OnGatewayDisconnect {
       await this.chatsSocketService.commandBanList(client, data.channelId);
       return;
     }
+    const targetUser = await this.usersService.readOnePurePlayerWithName(data.target);
+    if (client.data.userId === targetUser.id)
+      return ;
     const log = await this.chatsSocketService.commandBan(client, data.channelId, data.target);
 
     // 이미 채팅방에 있으면 강퇴
@@ -441,6 +447,9 @@ export class ChatsGateway implements OnGatewayConnection, OnGatewayDisconnect {
       client.emit('NOTICE', log);
       return;
     }
+    const targetUser = await this.usersService.readOnePurePlayerWithName(data.target);
+    if (client.data.userId === targetUser.id)
+      return ;
     const log = await this.chatsSocketService.commandUnban(client, data.channelId, data.target);
     client.emit("NOTICE", log);
   }
@@ -448,6 +457,9 @@ export class ChatsGateway implements OnGatewayConnection, OnGatewayDisconnect {
   @UseGuards(JwtWsGuard)
   @SubscribeMessage('BLOCK')
   async blockClient(client: Socket, message) {
+    const targetUser = await this.usersService.readOnePurePlayerWithName(message.target);
+    if (client.data.userId === targetUser.id)
+      return ;
     const log = await this.chatsSocketService.commandBlock(client, message.channelId, message.userId, message.target);
     if (!log)
       return;
@@ -457,6 +469,9 @@ export class ChatsGateway implements OnGatewayConnection, OnGatewayDisconnect {
   @UseGuards(JwtWsGuard)
   @SubscribeMessage('UNBLOCK')
   async unblockClient(client: Socket, data) {
+    const targetUser = await this.usersService.readOnePurePlayerWithName(data.target);
+    if (client.data.userId === targetUser.id)
+      return ;
     const log = await this.chatsSocketService.commandUnblock(client, data.channelId, data.userId, data.target);
     client.emit("NOTICE", log);
   }
@@ -471,6 +486,9 @@ export class ChatsGateway implements OnGatewayConnection, OnGatewayDisconnect {
       return;
     }
     try {
+      const targetUser = await this.usersService.readOnePurePlayerWithName(data.target);
+      if (client.data.userId === targetUser.id)
+        return ;
       const log = await this.chatsSocketService.commandMute(client, data.channelId, data.target);
       const msg = this.chatsSocketService.getNotice(`${data.target}의 채팅이 1분간 금지됩니다.`, 21, client.data.status);
       client.emit('NOTICE', log);
@@ -504,6 +522,9 @@ export class ChatsGateway implements OnGatewayConnection, OnGatewayDisconnect {
       client.emit('NOTICE', 8);
       return;
     }
+    const targetUser = await this.usersService.readOnePurePlayerWithName(data.target);
+    if (client.data.userId === targetUser.id)
+      return ;
     const msg = await this.chatsSocketService.commandOp(client, data.channelId, data.target);
     const log = this.chatsSocketService.getNotice(`${data.target}님이 op권한을 획득했습니다.`, 36, client.data.status);
     this.chatsSocketService.sendChannelMember(client, data.channelId);
@@ -523,6 +544,8 @@ export class ChatsGateway implements OnGatewayConnection, OnGatewayDisconnect {
       client.emit("NOTICE", log);
       return;
     }
+    if (client.data.userId === target.id)
+      return ;
     const targetClient = this.getClientWithStatus(target);
     if (!targetClient) {
       if (target.status === STATUS.GAME)
@@ -577,6 +600,8 @@ export class ChatsGateway implements OnGatewayConnection, OnGatewayDisconnect {
         client.emit("NOTICE", msg);
         return;
       }
+      if (client.data.userId === target.id)
+        return ;
       const targetClient = this.getClientWithStatus(target);
       this.chatsSocketService.requestFriend(client, targetClient, data.userId, target);
     }

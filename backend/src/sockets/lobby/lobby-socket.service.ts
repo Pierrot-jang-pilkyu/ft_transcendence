@@ -129,6 +129,12 @@ export class LobbySocketService {
   async updateProfile(client: Socket, data) {
     try {
       const userId = client.data.userId;
+      const name: string = data.name;
+      const arr = name.split(' ');
+      if (name.length <= 0 || name.length > 10)
+        return ;
+      if (arr.length === 0 || arr.length > 1)
+        return ;
       await this.usersService.updatePlayer(userId, data.name, data.avatar);
       return (this.getNotice("성공적으로 변경 되었습니다.", 38, client.data.status));
     }

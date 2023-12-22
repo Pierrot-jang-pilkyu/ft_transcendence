@@ -184,6 +184,8 @@ export class LobbyGateway implements OnGatewayConnection, OnGatewayDisconnect {
         client.emit("NOTICE", msg);
         return;
       }
+      if (client.data.userId === target.id)
+        return ;
       const targetClient = this.getClientWithStatus(target);
       this.lobbySocketService.requestFriend(client, targetClient, data.userId, target);
     }

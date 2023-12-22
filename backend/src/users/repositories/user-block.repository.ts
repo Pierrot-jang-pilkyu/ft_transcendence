@@ -35,8 +35,9 @@ export class UserBlockRepository extends Repository<UserBlock> {
       .subQuery()
       .from(Player, 'player')
       .select('player.id')
-      .where('name = :target', { target: targetName })
+      .where(`player.name = '${targetName}'`)
       .getQuery();
+
     const userBlock = await this.createQueryBuilder('block_list')
       .insert()
       .values({ user: user, target: () => `${playerQr}` })
@@ -92,7 +93,7 @@ export class UserBlockRepository extends Repository<UserBlock> {
       .subQuery()
       .from(Player, 'player')
       .select('player.id')
-      .where('name = :name', { name: name })
+      .where(`player.name = '${name}'`)
       .getQuery();
 
     const deleteResult = await this.dataSource

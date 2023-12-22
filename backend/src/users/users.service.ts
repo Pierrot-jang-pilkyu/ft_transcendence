@@ -301,7 +301,7 @@ export class UsersService {
       .getRepository(FriendRequest).createQueryBuilder('friend_list')
       .leftJoinAndSelect('friend_list.send', 'send')
       .leftJoinAndSelect('friend_list.recv', 'recv')
-      .select(['friend_list.id', 'recv.id', 'recv.name', 'send.id', 'send.name'])
+      .select(['friend_list.id', 'recv.id', 'recv.name', 'recv.avatar', 'send.id', 'send.name', 'send.avatar'])
       .where('recv.id = :id', { id: recv })
       .getMany();
     return (friendRequestList);
@@ -313,7 +313,7 @@ export class UsersService {
       .getRepository(FriendRequest).createQueryBuilder('friend_list')
       .leftJoinAndSelect('friend_list.send', 'send')
       .leftJoinAndSelect('friend_list.recv', 'recv')
-      .select(['friend_list.id', 'recv.id', 'recv.name', 'send.id', 'send.name'])
+      .select(['friend_list.id', 'recv.id', 'recv.name', 'recv.avatar', 'send.id', 'send.name', 'send.avatar'])
       .where('send.id = :send', { send: send })
       .andWhere('recv.id = :recv', { recv: recv })
       .getOne();
@@ -326,7 +326,7 @@ export class UsersService {
       .getRepository(FriendRequest).createQueryBuilder('friend_list')
       .leftJoinAndSelect('friend_list.send', 'send')
       .leftJoinAndSelect('friend_list.recv', 'recv')
-      .select(['friend_list.id', 'recv.id', 'recv.name', 'send.id', 'send.name'])
+      .select(['friend_list.id', 'recv.id', 'recv.name', 'recv.avatar', 'send.id', 'send.name', 'send.avatar'])
       .where('send.id = :id', { id: send })
       .getMany();
     return (friendRequestList);
