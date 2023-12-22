@@ -317,6 +317,10 @@ export class ChatsSocketService {
         client.emit("BLOCK", userBlocks);
         return (null);
       }
+
+      const targetUser = await this.usersService.readOnePurePlayerWithName(targetName);
+      if (client.data.userId === targetUser.id)
+        return (null);
       await this.usersService.createBlockInfoWithTarget(userId, targetName);
       return (this.getNotice('차단 목록에 추가하였습니다.', 17, client.data.status));
     } catch (e) {

@@ -457,9 +457,6 @@ export class ChatsGateway implements OnGatewayConnection, OnGatewayDisconnect {
   @UseGuards(JwtWsGuard)
   @SubscribeMessage('BLOCK')
   async blockClient(client: Socket, message) {
-    const targetUser = await this.usersService.readOnePurePlayerWithName(message.target);
-    if (client.data.userId === targetUser.id)
-      return ;
     const log = await this.chatsSocketService.commandBlock(client, message.channelId, message.userId, message.target);
     if (!log)
       return;
