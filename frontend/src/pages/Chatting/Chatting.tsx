@@ -469,8 +469,6 @@ function Chatting(props: any) {
 
     currentCR.chatLogList = res;
 
-    console.log(res);
-
     return res;
   };
 
@@ -551,7 +549,7 @@ function Chatting(props: any) {
         password: pw,
         limit: parseInt(limits),
       },
-      () => { console.log("HOST error."); });
+      () => { setLogin(false) });
     }
   }
 
@@ -561,13 +559,9 @@ function Chatting(props: any) {
         resFunc(res)
       })
       .catch((error) => {
-        console.log(error);
         if (error.response.data.message === "Unauthorized") {
           axios.get("http://" + import.meta.env.VITE_BACKEND + "/auth/refresh/2fa")
             .then(() => {
-              console.log(
-                "refresh"
-              )
               axios(axObj).then((res) => { resFunc(res) })
               .catch((error) => {
                 console.log(error);
@@ -583,9 +577,6 @@ function Chatting(props: any) {
   useEffect(() => {
 
     function getUserRes(Response:any) {
-      // console.log("me");
-      // console.log(Response.data);
-
       // setThisUser(Response.data);
       // setUserId(parseInt(Response.data.id));
       thisUser.id = Response.data.id;
@@ -602,8 +593,7 @@ function Chatting(props: any) {
 
       function getChatListMe(Response:any) {
         setMe(Response.data);
-        // console.log("me");
-        // console.log(Response.data);
+
         for (let i = 0; i < Response.data.length; ++i) {
           {
             Response.data[i].public &&
@@ -645,10 +635,8 @@ function Chatting(props: any) {
 
       function getChatListPublic(Response:any) {
         setOther(Response.data);
-          // console.log("other");
-          // console.log(Response.data);
+
           for (let i = 0; i < Response.data.length; ++i) {
-            // console.log(Response.data[i]);
             {
               Response.data[i].public &&
                 publicChatList.push({
@@ -686,11 +674,8 @@ function Chatting(props: any) {
     
     }
     if (dmChatList.length === 0) {
-      console.log("dm");
       function getChatListDM(Response:any) {
         setOther(Response.data);
-          console.log("dm");
-          console.log(Response.data);
           for (let i = 0; i < Response.data.length; ++i) {
             dmChatList.push({
               start: 0,
@@ -715,20 +700,15 @@ function Chatting(props: any) {
 
     socket.connect();
 
-    console.log(state);
     if (dm)
     {
       setDm(false);
-      console.log("check");
       freshSocket(socket, "DM",
       state.data,
-      () => { console.log("DM error."); });
+      () => { setLogin(false) });
     }
 
     function onLoadChat(responseData: any) {
-      console.log("LOADCHAT");
-      console.log(responseData);
-
       for (let i = responseData.length - 1; i > -1; --i) {
         currentCR.backLogList.push({
           name: responseData[i].user.name,
@@ -746,16 +726,12 @@ function Chatting(props: any) {
     }
 
     function onInfoChList(responseData: any) {
-      console.log("INFO_CH_LIST");
-      console.log(responseData);
-
       clientChatList.splice(0, clientChatList.length);
       clientChatList.push(lobby);
       publicChatList.splice(0, publicChatList.length);
       dmChatList.splice(0, dmChatList.length);
 
       for (let i = 0; i < responseData.me.length; ++i) {
-        // console.log(responseData.me[i]);
         {
           responseData.me[i].public &&
             clientChatList.push({
@@ -785,7 +761,6 @@ function Chatting(props: any) {
       }
 
       for (let i = 0; i < responseData.other.length; ++i) {
-        // console.log(responseData.other[i]);
         {
           responseData.other[i].public &&
             publicChatList.push({
@@ -815,7 +790,6 @@ function Chatting(props: any) {
       }
 
       for (let i = 0; i < responseData.dm.length; ++i) {
-        // console.log(responseData.dm[i]);
         {
           responseData.dm[i].public &&
             dmChatList.push({
@@ -849,9 +823,6 @@ function Chatting(props: any) {
     }
 
     function onInfoChMem(responseData: any) {
-      console.log("INFO_CH_MEMBER");
-      console.log(responseData);
-
       // code
       currentCR.users.splice(0, currentCR.users.length);
       for (let i = 0; i < responseData.length; ++i) {
@@ -871,8 +842,6 @@ function Chatting(props: any) {
 
     function addChatLog(responseData: any, flag: number) {
       const res: any = [currentCR.chatLogList];
-
-      console.log(thisUser);
 
       if (flag === 0) {
         // if (cr.backLogList[i].name === props.name)
@@ -1002,23 +971,14 @@ function Chatting(props: any) {
     }
 
     function onMSG(responseData: any) {
-      console.log("MSG");
-      console.log(responseData);
-
       setChatLog(addChatLog(responseData, 0));
     }
 
     function onList(responseData: any) {
-      // console.log("MSG");
-      // console.log(responseData);
-
       setChatLog(addChatLog(responseData, 1));
     }
 
     function onKick(responseData: any) {
-      console.log("KICK");
-      console.log(responseData);
-
       socket.emit("EXIT", { channelId: currentCR.chatId, userId: userId });
       logDay = "";
       currentCR.start = clientChatList[0].start;
@@ -1031,9 +991,6 @@ function Chatting(props: any) {
     }
 
     function onBan(responseData: any) {
-      console.log("BAN");
-      console.log(responseData);
-
       const thisTime: string =
         today.getFullYear() +
         "-" +
@@ -1070,9 +1027,6 @@ function Chatting(props: any) {
     }
 
     function onBlock(responseData:any) {
-      console.log("BLOCK");
-      console.log(responseData);
-
       const thisTime:string =
         today.getFullYear() +
         "-" +
@@ -1090,9 +1044,6 @@ function Chatting(props: any) {
         "Z";
 
       let content: string = "  BLOCK LIST\n--------------\n    ";
-
-      console.log(thisTime);
-      console.log(typeof(thisTime));
 
       for (let i = 0; i < responseData.length; ++i) {
         content += responseData[i].target.name + "\n    ";
@@ -1138,8 +1089,6 @@ function Chatting(props: any) {
     }
 
     function onNotice(responseData: any) {
-      console.log("NOTICE");
-      console.log(responseData);
 
       const thisTime: string =
         today.getFullYear() +
@@ -1195,11 +1144,8 @@ function Chatting(props: any) {
           setChatLog(onChatting(currentCR));
           break;
         case 5: // 5	JOIN	채팅방 입장	유저님이 채팅방에 입장하셨습니다.
-          console.log(pwFlag2);
           if (pwFlag2) {
-            console.log("진입했다.");
             pwFlag2 = false;
-            console.log(pwFlag2);
             handleClosePWModal();
             logDay = "";
             currentCR.start = publicChatList[index2].start;
@@ -1375,7 +1321,6 @@ function Chatting(props: any) {
                     "/auth/refresh/login"
                 );
               }
-              console.log(error);
             });
           break;
         default: // 그 외
@@ -1394,9 +1339,6 @@ function Chatting(props: any) {
     // -------------------------------------------------------------------
 
     function onHost(responseData: any) {
-      console.log("HOST");
-      console.log(responseData);
-
       currentCR.chatId = responseData.channelId;
       setChatId(responseData.channelId);
       setChatTitle(responseData.title);
@@ -1405,9 +1347,6 @@ function Chatting(props: any) {
     }
 
     function onDM(responseData: any) {
-      console.log("DM");
-      console.log(responseData);
-
       currentCR.chatId = responseData.channelId;
       setChatId(responseData.channelId);
       setChatTitle(responseData.title);
@@ -1415,12 +1354,9 @@ function Chatting(props: any) {
     }
 
     function onDM_QUIT() {
-      // socket.emit("QUIT", { channelId: chatId, userId: userId });
-      console.log("recv Quit");
-      console.log("chatId", currentCR.chatId);   
       freshSocket(socket, "QUIT",
         { channelId: currentCR.chatId, userId: userId },
-        () => { console.log("QUIT error."); });
+        () => { setLogin(false) });
 
       setMenuChecked(false);
 
@@ -1435,13 +1371,10 @@ function Chatting(props: any) {
       // socket.emit("JOIN", { channelId: -1, userId: userId, password: "" });
       freshSocket(socket, "JOIN",
         { channelId: -1, userId: userId, password: "" },
-        () => { console.log("Lobby join error."); });
+        () => { setLogin(false) });
     }
 
     function onRequestFriend(responseData: any) {
-      console.log("REQUEST_FRIEND");
-      console.log(responseData);
-
       // data.avatar를 사용하여 원하는 동작 수행
       setModalContent(
         <ModalAccept
@@ -1455,9 +1388,6 @@ function Chatting(props: any) {
     }
 
     function onInvite(responseData: any) {
-      console.log("INVITE");
-      console.log(responseData);
-
       // data.avatar를 사용하여 원하는 동작 수행
       setModalContent(
         <ModalAccept
@@ -1471,9 +1401,6 @@ function Chatting(props: any) {
     }
 
     function onJoinGame(responseData: any) {
-      console.log("JOIN_GAME");
-      console.log(responseData);
-
       navigate("/Game", {
         state: {
           userId: userId,
@@ -1539,11 +1466,6 @@ function Chatting(props: any) {
   function enter(chatId: number, userId: number, password: string) {
     // userId: userId
     if (chatId === 0) return;
-
-    // console.log(pwFlag);
-    // console.log(
-    //   "channelId: " + chatId + ", userId: " + userId + ", password: " + password
-    // );
     // socket.emit("JOIN", {
     //   channelId: chatId,
     //   userId: userId,
@@ -1555,7 +1477,7 @@ function Chatting(props: any) {
       userId: userId,
       password: password,
     },
-    () => { console.log("chatId join error."); });
+    () => { setLogin(false) });
   }
 
   function enterRoom(pw: string) {
@@ -1588,7 +1510,7 @@ function Chatting(props: any) {
             // });
             freshSocket(socket, "JOIN",
               { channelId: -1, userId: userId, password: "" },
-              () => { console.log("Lobby join error."); });
+              () => { setLogin(false) });
           }
         }
       }
@@ -1636,10 +1558,9 @@ function Chatting(props: any) {
 
   function clickQuit() {
     // socket.emit("QUIT", { channelId: chatId, userId: userId });
-    console.log("quit current chatId: ", currentCR.chatId);
     freshSocket(socket, "QUIT",
     { channelId: currentCR.chatId, userId: userId },
-    () => { console.log("QUIT error."); } );
+    () => { setLogin(false) } );
 
     setMenuChecked(false);
 
@@ -1654,7 +1575,7 @@ function Chatting(props: any) {
     // socket.emit("JOIN", { channelId: -1, userId: userId, password: "" });
     freshSocket(socket, "JOIN",
     { channelId: -1, userId: userId, password: "" },
-    () => { console.log("Lobby join error."); });
+    () => { setLogin(false) });
   }
 
   function checkInput(input: string) {
@@ -1722,7 +1643,7 @@ function Chatting(props: any) {
               userId: userId,
               target: cmdList[1],
             },
-            () => { console.log("KICK error."); });
+            () => { setLogin(false) });
           break;
         case "ban":
           if (cmdList.length === 2) {
@@ -1737,7 +1658,7 @@ function Chatting(props: any) {
               userId: userId,
               target: cmdList[1],
             },
-            () => { console.log("BAN error."); });
+            () => { setLogin(false) });
           } else {
             // socket.emit("BAN", {
             //   channelId: currentCR.chatId,
@@ -1750,7 +1671,7 @@ function Chatting(props: any) {
               userId: userId,
               target: "",
             },
-            () => { console.log("BAN error."); });
+            () => { setLogin(false) });
           }
           break;
         case "unban":
@@ -1765,7 +1686,7 @@ function Chatting(props: any) {
               userId: userId,
               target: cmdList[1],
             },
-            () => { console.log("UNBAN error."); });
+            () => { setLogin(false) });
           break;
         case "mute":
           // socket.emit("MUTE", {
@@ -1779,7 +1700,7 @@ function Chatting(props: any) {
               userId: userId,
               target: cmdList[1],
             },
-            () => { console.log("MUTE error."); });
+            () => { setLogin(false) });
           break;
         case "op":
           // socket.emit("OP", {
@@ -1793,7 +1714,7 @@ function Chatting(props: any) {
               userId: userId,
               target: cmdList[1],
             },
-            () => { console.log("OP error."); });
+            () => { setLogin(false) });
           break;
         case "block":
           if (cmdList.length === 2) {
@@ -1808,7 +1729,7 @@ function Chatting(props: any) {
               userId: userId,
               target: cmdList[1],
             },
-            () => { console.log("BLOCK error."); });
+            () => { setLogin(false) });
           } else {
             // socket.emit("BLOCK", {
             //   channelId: currentCR.chatId,
@@ -1821,7 +1742,7 @@ function Chatting(props: any) {
               userId: userId,
               target: "",
             },
-            () => { console.log("BLOCK error."); });
+            () => { setLogin(false) });
           }
           break;
         case "unblock":
@@ -1836,7 +1757,7 @@ function Chatting(props: any) {
               userId: userId,
               target: cmdList[1],
             },
-            () => { console.log("UNBLOCK error."); });
+            () => { setLogin(false) });
           break;
         case "pass":
           if (cmdList.length === 2) {
@@ -1851,7 +1772,7 @@ function Chatting(props: any) {
               userId: userId,
               target: cmdList[1],
             },
-            () => { console.log("PASS error."); });
+            () => { setLogin(false) });
           } else {
             // socket.emit("PASS", {
             //   channelId: currentCR.chatId,
@@ -1864,7 +1785,7 @@ function Chatting(props: any) {
               userId: userId,
               target: null,
             },
-            () => { console.log("PASS error."); });
+            () => { setLogin(false) });
           }
           break;
         case "request_friend":
@@ -1878,7 +1799,7 @@ function Chatting(props: any) {
               userId: userId,
               target: cmdList[1],
             },
-            () => { console.log("REQUEST_FRIEND error."); });
+            () => { setLogin(false) });
           break;
         case "invite":
           if (cmdList.length === 1) {
@@ -1891,13 +1812,12 @@ function Chatting(props: any) {
               userId: userId,
               target: cmdList[1],
             },
-            () => { console.log("INVITE error."); });
+            () => { setLogin(false) });
           break;
         default:
           break;
       }
     } else {
-      console.log(chat);
       socket.emit("MSG", {
         channelId: currentCR.chatId,
         userId: userId,

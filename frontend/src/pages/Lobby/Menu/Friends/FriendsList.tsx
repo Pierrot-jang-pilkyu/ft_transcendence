@@ -157,7 +157,7 @@ function FriendsList() {
       "http://" + import.meta.env.VITE_BACKEND + "/users/players/me",
       getUserRes,
       () => {
-        console.log("User's Info Error.");
+        setLogin(false);
       }
     );
 

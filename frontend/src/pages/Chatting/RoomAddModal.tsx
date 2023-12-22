@@ -35,10 +35,6 @@ function RoomAddModal({ onClose, roomAdd, id }) {
   const navigate = useNavigate();
 
   function onClick() {
-    console.log(name);
-    console.log(limits);
-    console.log(pw);
-    
     if (!(2 <= parseInt(limits) && parseInt(limits) <= 10))
     {
       setTextError(true);
