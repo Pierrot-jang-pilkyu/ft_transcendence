@@ -1326,6 +1326,16 @@ function Chatting(props: any) {
         default: // 그 외
           break;
       }
+      if (currentCR.chatId === 0) {
+        logDay = "";
+        currentCR.start = clientChatList[0].start;
+        setChatTitle(clientChatList[0].title);
+        setChatId(clientChatList[0].chatId);
+        currentCR.backLogList = clientChatList[0].backLogList;
+        currentCR.users = clientChatList[0].users;
+        setChatAvatar(viewAvatar());
+        setChatLog(onChatting(currentCR));
+      }
     }
 
     // -------------------------------------------------------------------
@@ -1346,11 +1356,13 @@ function Chatting(props: any) {
       handleCloseRoomModal();
     }
 
-    function onDM(responseData: any) {
+    async function onDM(responseData: any) {
       currentCR.chatId = responseData.channelId;
-      setChatId(responseData.channelId);
-      setChatTitle(responseData.title);
-      currentCR.backLogList.splice(0, currentCR.backLogList.length);
+      await setChatId(responseData.channelId);
+      await setChatTitle(responseData.title);
+      await setChatLog([]);
+      currentCR.backLogList = [];
+      currentCR.chatLogList = [];
     }
 
     function onDM_QUIT() {
