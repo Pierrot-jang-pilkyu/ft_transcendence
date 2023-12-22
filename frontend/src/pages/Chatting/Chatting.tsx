@@ -1907,7 +1907,7 @@ function Chatting(props: any) {
 
   return (
     <div className={`${styles.background}`}>
-      <Header />
+      <Header pageFlag={2}/>
       <div className={styles.container}>
         <div className={styles.item}>
           <div className={styles.chatlist_title}>
