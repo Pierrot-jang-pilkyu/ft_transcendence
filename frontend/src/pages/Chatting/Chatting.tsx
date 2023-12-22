@@ -708,7 +708,7 @@ function Chatting(props: any) {
       () => { setLogin(false) });
     }
 
-    function onLoadChat(responseData: any) {
+    async function onLoadChat(responseData: any) {
       for (let i = responseData.length - 1; i > -1; --i) {
         currentCR.backLogList.push({
           name: responseData[i].user.name,
@@ -721,8 +721,8 @@ function Chatting(props: any) {
       if (currentCR.backLogList.length === 0) currentCR.start = 0;
 
       // onChatting(currentCR);
-      setChatLog(onChatting(currentCR));
-      // currentCR.chatLogList = chatLog;
+      await setChatLog(onChatting(currentCR));
+      currentCR.chatLogList = chatLog;
     }
 
     function onInfoChList(responseData: any) {
@@ -846,7 +846,7 @@ function Chatting(props: any) {
       if (flag === 0) {
         // if (cr.backLogList[i].name === props.name)
         if (responseData.user.name === thisUser.name) {
-          thisDayStamp(res, responseData.user.date);
+          thisDayStamp(res, responseData.date);
           res.push(
             <li>
               <div className={`${styles.chat} ${styles.chat_end}`}>
@@ -861,7 +861,7 @@ function Chatting(props: any) {
                 <div className={`${styles.chat_header}`}>
                   {responseData.user.name}
                   <time className={`${styles.text_xs} ${styles.opacity_50}`}>
-                    {timeStamp_this(0, responseData.user.date)}
+                    {timeStamp_this(0, responseData.date)}
                   </time>
                 </div>
                 {/* <div className={ `${styles.chat_bubble}` }><pre>{responseData.content}</pre></div> */}
@@ -875,7 +875,7 @@ function Chatting(props: any) {
             </li>
           );
         } else {
-          thisDayStamp(res, responseData.user.date);
+          thisDayStamp(res, responseData.date);
           res.push(
             <li>
               <div className={`${styles.chat} ${styles.chat_start}`}>
@@ -890,7 +890,7 @@ function Chatting(props: any) {
                 <div className={`${styles.chat_header}`}>
                   {responseData.user.name}
                   <time className={`${styles.text_xs} ${styles.opacity_50}`}>
-                    {timeStamp_this(0, responseData.user.date)}
+                    {timeStamp_this(0, responseData.date)}
                   </time>
                 </div>
                 {/* <div className={ `${styles.chat_bubble}` }><pre>{responseData.content}</pre></div> */}
@@ -907,7 +907,7 @@ function Chatting(props: any) {
       } else if (flag === 1) {
         // if (cr.backLogList[i].name === props.name)
         if (responseData.user.name === thisUser.name) {
-          thisDayStamp(res, responseData.user.date);
+          thisDayStamp(res, responseData.date);
           res.push(
             <li>
               <div className={`${styles.chat} ${styles.chat_end}`}>
@@ -922,7 +922,7 @@ function Chatting(props: any) {
                 <div className={`${styles.chat_header}`}>
                   {responseData.user.name}
                   <time className={`${styles.text_xs} ${styles.opacity_50}`}>
-                    {timeStamp_this(0, responseData.user.date)}
+                    {timeStamp_this(0, responseData.date)}
                   </time>
                 </div>
                 <div className={`${styles.chat_bubble}`}>
@@ -935,7 +935,7 @@ function Chatting(props: any) {
             </li>
           );
         } else {
-          thisDayStamp(res, responseData.user.date);
+          thisDayStamp(res, responseData.date);
           res.push(
             <li>
               <div className={`${styles.chat} ${styles.chat_start}`}>
@@ -950,7 +950,7 @@ function Chatting(props: any) {
                 <div className={`${styles.chat_header}`}>
                   {responseData.user.name}
                   <time className={`${styles.text_xs} ${styles.opacity_50}`}>
-                    {timeStamp_this(0, responseData.user.date)}
+                    {timeStamp_this(0, responseData.date)}
                   </time>
                 </div>
                 <div className={`${styles.chat_bubble}`}>
