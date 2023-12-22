@@ -45,6 +45,7 @@ function ChangeModal({ onClose }) {
                   .then((res) => {
                     setProfile(res.data);
                     setOriginalImage(res.data.avatar);
+                    setUserName(res.data.name);
                   });
               })
               .catch(() => {
@@ -83,11 +84,13 @@ function ChangeModal({ onClose }) {
   };
 
   const sendToServer = (imageUrl: string, username: string) => {
+    if (typeof username === "undefined") username = profile.name;
     freshSocket(socket, "UPDATE", { name: username, avatar: imageUrl }, () => {
       setLogin(false);
     });
   };
   function onChangeName(e) {
+    console.log(userName);
     setUserName(e.target.value);
   }
 

@@ -146,7 +146,6 @@ export class ChatsSocketService {
   }
 
   async connectChatRoom(client: Socket, channelId: number, userId: number) {
-    console.log("join channel id: ", channelId);
     const roomId = channelId.toString();
     client.leave(client.data.roomId);
     client.data.roomId = roomId;
@@ -319,6 +318,8 @@ export class ChatsSocketService {
       }
 
       const targetUser = await this.usersService.readOnePurePlayerWithName(targetName);
+      if (!targetUser)
+        return (this.getNotice("존재하지 않는 유저입니다.", 11, client.data.status));
       if (client.data.userId === targetUser.id)
         return (null);
       await this.usersService.createBlockInfoWithTarget(userId, targetName);
@@ -379,10 +380,10 @@ export class ChatsSocketService {
       await this.chatsService.updateChannelPassword(channelId, password);
 
       if (password)
-        await this.chatsService.updateChannelConfigWithPublic(channelId, true);
-      else
         await this.chatsService.updateChannelConfigWithPublic(channelId, false);
-      
+      else
+        await this.chatsService.updateChannelConfigWithPublic(channelId, true);
+
       return (this.getNotice("비밀번호가 성공적으로 변경되었습니다.", 22, client.data.status));
     } catch (e) {
       return (this.getNotice("DB Error", 200, client.data.status));

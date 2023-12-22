@@ -426,6 +426,10 @@ export class ChatsGateway implements OnGatewayConnection, OnGatewayDisconnect {
       return;
     }
     const targetUser = await this.usersService.readOnePurePlayerWithName(data.target);
+    if (!targetUser) {
+      client.emit("NOTICE", this.chatsSocketService.getNotice("존재하지 않는 유저입니다.", 11, client.data.status));
+      return ;
+    }
     if (client.data.userId === targetUser.id)
       return ;
     const log = await this.chatsSocketService.commandBan(client, data.channelId, data.target);
@@ -448,6 +452,10 @@ export class ChatsGateway implements OnGatewayConnection, OnGatewayDisconnect {
       return;
     }
     const targetUser = await this.usersService.readOnePurePlayerWithName(data.target);
+    if (!targetUser) {
+      client.emit("NOTICE", this.chatsSocketService.getNotice("존재하지 않는 유저입니다.", 11, client.data.status));
+      return ;
+    }
     if (client.data.userId === targetUser.id)
       return ;
     const log = await this.chatsSocketService.commandUnban(client, data.channelId, data.target);
@@ -467,6 +475,10 @@ export class ChatsGateway implements OnGatewayConnection, OnGatewayDisconnect {
   @SubscribeMessage('UNBLOCK')
   async unblockClient(client: Socket, data) {
     const targetUser = await this.usersService.readOnePurePlayerWithName(data.target);
+    if (!targetUser) {
+      client.emit("NOTICE", this.chatsSocketService.getNotice("존재하지 않는 유저입니다.", 11, client.data.status));
+      return ;
+    }
     if (client.data.userId === targetUser.id)
       return ;
     const log = await this.chatsSocketService.commandUnblock(client, data.channelId, data.userId, data.target);
@@ -484,6 +496,10 @@ export class ChatsGateway implements OnGatewayConnection, OnGatewayDisconnect {
     }
     try {
       const targetUser = await this.usersService.readOnePurePlayerWithName(data.target);
+      if (!targetUser) {
+        client.emit("NOTICE", this.chatsSocketService.getNotice("존재하지 않는 유저입니다.", 11, client.data.status));
+        return ;
+      }
       if (client.data.userId === targetUser.id)
         return ;
       const log = await this.chatsSocketService.commandMute(client, data.channelId, data.target);
@@ -520,6 +536,10 @@ export class ChatsGateway implements OnGatewayConnection, OnGatewayDisconnect {
       return;
     }
     const targetUser = await this.usersService.readOnePurePlayerWithName(data.target);
+    if (!targetUser) {
+      client.emit("NOTICE", this.chatsSocketService.getNotice("존재하지 않는 유저입니다.", 11, client.data.status));
+      return ;
+    }
     if (client.data.userId === targetUser.id)
       return ;
     const msg = await this.chatsSocketService.commandOp(client, data.channelId, data.target);
