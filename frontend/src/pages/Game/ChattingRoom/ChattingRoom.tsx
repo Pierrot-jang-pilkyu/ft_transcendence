@@ -8,7 +8,6 @@ import { GameContext, socket } from "../Utils";
 function ChattingRoom({isLeft} : {isLeft:boolean})
 {
     const [game, setGame] = useContext<any>(GameContext);
-    const [input, setInput] = useState<any>();
     const [logs, setLogs] = useState<any>([]);
 
     useEffect(()=>{
@@ -20,17 +19,10 @@ function ChattingRoom({isLeft} : {isLeft:boolean})
         })
     }, []);
 
-    useEffect(()=>{
-        setLogs( (prev:any) => [
-            ...prev,
-            { content: input, isUser: true, isLeft: isLeft}
-        ]);
-    }, [input]);
-
     return (
         <div className={`${styles.container}`}>
             <Log logs={logs} left={game.room.left.player.name} right={game.room.right.player.name}></Log>
-            <Input setInput={setInput}></Input>
+            <Input setLogs={setLogs} isLeft={isLeft}></Input>
         </div>
     )
 }

@@ -3,11 +3,11 @@ import ChattingInputButton from "../../../../assets/ChattingInputButton.svg"
 import { useState } from "react";
 import { isOnlyBlank, socket } from "../../Utils";
 
-function Input({setInput})
+function Input({setLogs, isLeft}:{setLogs:any, isLeft:boolean})
 {
-    const [text, setText] = useState();
+    const [text, setText] = useState<any>();
 
-    function typeMessage(e) {
+    function typeMessage(e:any) {
         setText(e.target.value);
     }
 
@@ -16,11 +16,14 @@ function Input({setInput})
         if (isOnlyBlank(text))
             return ;
         socket.emit("MSG", text);
-        setInput(text);
+        setLogs( (prev:any) => [
+            ...prev,
+            { content: text, isUser: true, isLeft: isLeft}
+        ]);
         setText('');
     }
 
-    function pressEnter(e) {
+    function pressEnter(e:any) {
         if (e.key == "Enter")
             sendMessage();
     }
